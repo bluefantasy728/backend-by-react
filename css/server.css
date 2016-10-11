@@ -1,0 +1,29 @@
+.content-enter {
+    opacity: 0;
+    transition: opacity .8s ease;
+}
+
+.content-enter.content-enter-active {
+    opacity: 1;
+    /*transition: opacity .5s ease;*/
+}
+
+.content-leave {
+    opacity: 1;
+    transition: opacity .8s ease;
+}
+
+.content-leave.content-leave-active {
+    opacity: 0;
+    /*transition: opacity .5s ease;*/
+}
+.pr{
+    position: relative;
+}
+.pa{
+    position: absolute;
+    width:100%;
+    right:0;
+}
+
+

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"> <!--ie8开启标准渲染模式-->
+<meta name="viewport" content="width=device-width, initial-scale=1 , user-scalable=no">
+<title>仿网站管理后台-Bootstrap</title>
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/index.css" />
+<link rel="stylesheet" href="css/animate.css" />
+<link rel="stylesheet" href="css/server.css" />
+<style>
+</style>
+</head>
+<body>
+<nav class="navbar navbar-default">
+	<div class="container">
+		<!--小屏幕时候的logo和菜单按钮-->
+		<div class="navbar-header">
+			<button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a href="javascript:;" class="navbar-brand bg-primary"><strong>BLUE FANTASY</strong> <span>ADMIN</span></a>
+		</div>
+
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-left">
+				<li><a href="index.html"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;HOME PAGE</a></li>
+		        <li class="active"><a href="server.html"><span class="glyphicon glyphicon-hdd"></span>&nbsp;&nbsp; SERVER STATUS</a></li>
+		        <li><a href="user_list.html"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;USER MANAGEMENT</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+                <li><a href="#bbs"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;QUIT</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<!--导航-->
+<!--警告框-->
+<section id="warning">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="alert alert-danger alert-dismissible fade in" role="alert">
+				    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4>Found program bug!!!</h4>
+			        <p>The current version(V1.22) exists severe security bugs! Please fix it ASAP!!!</p>
+			        <p>
+			            <button type="button" class="btn btn-danger">Fix it</button>
+			            <button type="button" class="btn btn-default"  data-dismiss="alert">Handler it later</button>
+	      		    </p>
+				</div>					
+			</div>
+		</div>
+	</div>
+</section>
+<!--警告框-->
+<div class="container" >
+	<div class="row" id="container">
+
+	</div>
+</div>
+<!--统计和热帖-->
+
+<!--统计和热帖-->
+<!--访客和状态-->
+
+<!--访客和状态-->
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/Chart.js"></script>
+<script src="js/script.js"></script> <!--这段js是操作canvas画布中统计图标的代码-->
+<script src="js/react.js"></script>
+<script src="js/react-with-addons.js"></script>
+<script src="js/react-dom.js"></script>
+<script src="js/browser.min.js"></script>
+<script src="js/ReactRouter.min.js"></script>
+
+<script type="text/babel">
+
+	var Router = ReactRouter.Router;
+	var Route = ReactRouter.Route;
+	var Link = ReactRouter.Link;
+	var Redirect = ReactRouter.Redirect;
+	var IndexRoute = ReactRouter.IndexRoute;
+	var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+	/*
+	const MenuComponent = React.createClass({
+
+
+		render:function(props){
+			return (
+				<div>
+					<div className="col-md-3 list-group" >
+						<Link to="/statistic" className="list-group-item active">Website Statistic
+							Data</Link>
+						<Link to="/topics" className="list-group-item">Hot Topics</Link>
+						<Link to="/visits" className="list-group-item">Today's Visits</Link>
+						<Link to="/status" className="list-group-item">Server Status</Link>
+					</div>
+
+					<ReactCSSTransitionGroup className="col-md-9 pr"
+											 component="div"
+											 transitionName="content"
+											 transitionEnterTimeout={500}
+											 transitionLeaveTimeout={500}
+					>
+						{React.cloneElement(props.children, {key: location.pathname,className:"pa"})}
+					</ReactCSSTransitionGroup>
+				</div>
+			)
+		}
+	});
+	 */
+
+	const MenuComponent = ({ children, location }) => {
+		const changeLink = (ev) => {
+			var parent = ev.target.parentNode;
+			var children = parent.children;
+			for(var i=0; i<children.length; i++){
+				children[i].classList.remove('active');
+			}
+			ev.target.classList.add('active');
+		};
+
+		return (
+			<div>
+				<div className="col-md-3 list-group" onClick={changeLink}>
+					<Link to="/statistic" className="list-group-item active">Website Statistic
+						Data
+					</Link>
+					<Link to="/topics" className="list-group-item">Hot Topics</Link>
+					<Link to="/visits" className="list-group-item">Today's Visits</Link>
+					<Link to="/status" className="list-group-item">Server Status</Link>
+				</div>
+
+				<ReactCSSTransitionGroup className="col-md-9 pr"
+										 component="div"
+										 transitionName="content"
+										 transitionEnterTimeout={500}
+										 transitionLeaveTimeout={500}
+				>
+					{React.cloneElement(children, {key: location.pathname, className: "pa"})}
+				</ReactCSSTransitionGroup>
+			</div>
+		);
+	};
+
+
+
+	const StatisticComponent = React.createClass({
+		render:function(){
+			return (
+				<div className="panel panel-default pa">
+					<div className="panel-heading">
+						<h3 className="panel-title"><span className="glyphicon glyphicon-hdd"></span>&nbsp;&nbsp;
+							Website Statistic Data</h3>
+					</div>
+					<div className="panel-body">
+						<table className="table table-hover">
+							<thead>
+								<tr>
+									<th>Statistic Item</th>
+									<th>Today</th>
+									<th>Yesterday</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th>Registered Member</th>
+									<td>200</td>
+									<td>400</td>
+								</tr>
+								<tr>
+									<th>Login Member</th>
+									<td>4100</td>
+									<td>5112</td>
+								</tr>
+								<tr>
+									<th>Today's Topics</th>
+									<td>1540</td>
+									<td>4511</td>
+								</tr>
+								<tr>
+									<th>Forward Count</th>
+									<td>150</td>
+									<td>110</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			)
+		}
+	});
+
+	const TopicComponent = React.createClass({
+		render:function(){
+			return (
+				<div className="panel panel-default pa">
+					<div className="panel-heading">
+						<h3 className="panel-title"><span className="glyphicon glyphicon-comment"></span>&nbsp;&nbsp;
+							Hot Topics</h3>
+					</div>
+					<div className="panel-body">
+						<table className="table">
+							<tbody>
+								<tr>
+									<td><span className="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;
+										<a href="javascript:;">
+											贯穿全栈React Native开发App
+										</a>
+									</td>
+									<td>2015/08/08</td>
+								</tr>
+								<tr>
+									<td><span className="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;
+										<a href="javascript:;">
+											飞速上手的跨平台App开发
+										</a>
+									</td>
+									<td>2015/08/08</td>
+								</tr>
+								<tr>
+									<td><span className="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;
+										<a href="javascript:;">
+											所向披靡的响应式开发
+										</a>
+									</td>
+									<td>2015/08/08</td>
+								</tr>
+								<tr>
+									<td><span className="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;
+										<a href="javascript:;">
+											jQuery实现自定义滚动条
+										</a>
+									</td>
+									<td>2015/08/08</td>
+								</tr>
+								<tr>
+									<td><span className="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;
+										<a href="javascript:;">
+											颠覆式前端UI开发框架 React
+										</a>
+									</td>
+									<td>2015/08/08</td>
+								</tr>
+								<tr>
+									<td><span className="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;
+										<a href="javascript:;">
+											JS实现人机大战之五子棋（AI篇）
+										</a>
+									</td>
+									<td>2015/08/08</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			)
+		}
+	});
+
+	const GuestComponent = React.createClass({
+
+		componentDidMount:function(){
+			var ctx = document.getElementById("canvas").getContext("2d");
+			window.myLine = new Chart(ctx).Line(lineChartData, {
+				responsive: true
+			});
+		},
+
+		render:function(){
+			return (
+				<div className="panel panel-default pa">
+					<div className="panel-heading">
+						<h3 className="panel-title"><span className="glyphicon glyphicon-signal"></span>&nbsp;&nbsp;Today's Visits</h3>
+					</div>
+					<div className="panel-body">
+						<canvas id="canvas" className="col-md-12"></canvas>
+					</div>
+				</div>
+			)
+		}
+	});
+
+	const StateComponent = React.createClass({
+
+		render:function(){
+
+			return (
+				<div className="panel panel-default pa">
+					<div className="panel-heading">
+						<h3 className="panel-title"><span className="glyphicon glyphicon-hdd"></span>&nbsp;&nbsp;
+							Server Status</h3>
+					</div>
+					<div className="panel-body">
+						<p>Memory Usage Rate：40%</p>
+						<div className="progress">
+							<div className="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style={{width: 40 + '%'}}>
+								<span className="sr-only">40% Complete (success)</span>
+							</div>
+						</div>
+						<p>Database Usage Rate：20%</p>
+						<div className="progress">
+							<div className="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style={{width: 20 + '%'}}>
+								<span className="sr-only">20% Complete</span>
+							</div>
+						</div>
+						<p>Disk Usage Rate：60%</p>
+						<div className="progress">
+							<div className="progress-bar progress-bar-warning progress-bar-striped" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style={{width: 60 + '%'}}>
+								<span className="sr-only">60% Complete (warning)</span>
+							</div>
+						</div>
+						<p>CPU Usage Rate：80%</p>
+						<div className="progress">
+							<div className="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style={{width: 80 + '%'}}>
+								<span className="sr-only">80% Complete (danger)</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			)
+		}
+	});
+
+	ReactDOM.render(
+		<Router>
+			<Route path="/" component={MenuComponent}>
+
+				<IndexRoute component={StatisticComponent} />
+				<Route default path="statistic" component={StatisticComponent} />
+				<Route path="topics" component={TopicComponent} />
+				<Route path="visits" component={GuestComponent} />
+				<Route path="status" component={StateComponent} />
+
+			</Route>
+		</Router>
+		,document.getElementById('container')
+	);
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

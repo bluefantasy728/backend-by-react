@@ -1,0 +1,163 @@
+body{
+	font-family: "微软雅黑";
+}
+.mb30{
+	margin-bottom: 30px;
+}
+.icon-grain{
+	width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: white;
+    background: #40d2b1;
+    text-align: center;
+    line-height: 40px;
+    margin-right: 15px;
+}
+#tag-manage .alert{
+	margin: 0 10px 10px 0;
+}
+/*顶部导航*/
+.navbar a span{
+	color: #00bfff;
+}
+.navbar a strong{
+	color: deepskyblue;
+}
+/*顶部导航*/
+/*统计和热帖*/
+#static_hot .hot table{
+	margin-bottom: 0
+}
+#static_hot .hot table td{
+	cursor: pointer;
+}
+#static_hot .hot tbody tr td:last-child{
+	color: #337ab7;
+	font-size: 12px;
+	text-align: right;
+}
+/*统计和热帖*/
+/*访客和状态*/
+#guest_server .progress{
+    margin-bottom: 15px;
+}
+/*访客和状态*/
+/*留言板*/
+.icon50{
+	widows: 50px;
+	height: 50px;
+}
+#bbs table td{
+	height: 50px;
+	vertical-align: middle;
+}
+#msg-list{
+	margin: 0 0 40px 0;
+}
+#msg-list form{
+	margin: 0 0 20px 0;
+}
+#msg-list form label{
+	font-size: 16px;
+}
+#msg-list .well{
+	padding: 10px;
+	margin-bottom: 10px;
+}
+#msg-list em{
+	padding-right:5px;
+}
+#message-box textarea{
+	width:100%;
+	border-radius: 5px;
+}
+
+.messageContainer-enter{
+	opacity: 0;
+}
+.messageContainer-enter.messageContainer-enter-active{
+	opacity: 1;
+	transition:opacity 800ms ease;
+}
+.messageContainer-leave{
+	opacity: 1;
+}
+.messageContainer-leave.messageContainer-leave-active{
+	opacity: 0;
+	transition:opacity 800ms ease;
+}
+/*留言板*/
+/*底部*/
+#footer{
+	text-align: center;
+	margin-top: 20px;
+}
+/*底部*/
+
+/*Todo List Widget*/
+
+.todo-list-item .glyphicon { 
+	margin-right:5px; 
+	color: #9fadbb; 
+}
+
+.todo-list-item .glyphicon:hover { 
+	margin-right:5px; 
+	color: #1b3548; 
+}
+
+.todo-list { 
+	padding: 0;
+	margin: -15px;
+	background: #fff;
+	color: #5f6468;
+}
+
+#checkbox {
+	margin: 0;
+}
+
+.todo-list .checkbox { 
+	display:inline-block; 
+	margin: 0px;
+}
+
+.panel-body input[type=checkbox]:checked + label { 
+	text-decoration: line-through;
+	color: #777; 
+}
+
+.todo-list-item {
+	list-style: none;
+	line-height: 0.9;
+	padding: 14px 15px 8px 15px;
+}
+
+.todo-list-item:hover, a.todo-list-item:focus {
+	text-decoration: none;
+	background-color: #f6f6f6;
+}
+
+.todo-list-item a.trash .glyphicon:hover {
+	color: #ef4040;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

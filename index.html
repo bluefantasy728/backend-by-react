@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"> <!--ie8开启标准渲染模式-->
+<meta name="viewport" content="width=device-width, initial-scale=1 , user-scalable=no">
+<title>bluefantasy admin</title>
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/index.css" />
+<script src="./js/react.js"></script>
+<script src="js/react-with-addons.js"></script>
+<script src="./js/react-dom.js"></script>
+<script src="./js/browser.min.js"></script>
+<script src="./js/pubsub.js"></script>
+<style>
+</style>
+</head>
+<body>
+<!--导航-->
+<nav class="navbar navbar-default">
+	<div class="container">
+		<!--小屏幕时候的logo和菜单按钮-->
+		<div class="navbar-header">
+			<button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a href="javascript:;" class="navbar-brand bg-primary"><strong>BLUE FANTASY</strong> <span>ADMIN</span></a>
+		</div>
+
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-left">
+				<li class="active"><a href="index.html"><span class="glyphicon glyphicon-home"></span>&nbsp&nbspHOME PAGE</a></li>
+		        <li><a href="server.html"><span class="glyphicon glyphicon-hdd"></span>&nbsp&nbspSERVER STATUS</a></li>
+		        <li><a href="user_list.html"><span class="glyphicon glyphicon-user"></span>&nbsp&nbspUSER MANAGEMENT</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+                <li><a href="#bbs"><span class="glyphicon glyphicon-off"></span>&nbsp&nbspQUIT</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<!--导航-->
+
+<!--留言板-->
+<section id="bbs">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+	    			<div class="panel-heading">
+	     		   		<h3 class="panel-title">Message Board</h3>
+	    			</div>
+	   				<div id="message-box" class="panel-body">
+		      			<div id="msg-list" class="col-md-7">
+
+		      			</div>
+		      			<div class="col-md-5">
+							<div id="to-do-list">
+
+							</div>
+
+		      				<!--团队成员-->
+			      			<div class="panel panel-default">
+							    <div class="panel-heading">
+							        <div class="panel-title"><span class="glyphicon glyphicon-user"></span>&nbsp&nbspTeam Members</div>
+							    </div>
+							    <div class="panel-body">
+							        <table class="table table-bordered">
+							        	<tr>
+							        		<td>Manager (Victor)：<span class="glyphicon glyphicon-phone"></span>
+												13134848615</td>
+							        	</tr>
+							        	<tr>
+							        		<td>Database (Jonson)： <span class="glyphicon glyphicon-phone"></span>
+												13456127694
+											</td>
+							        	</tr>
+							        	<tr>
+							        		<td>BackEnd (Michael)：<span class="glyphicon glyphicon-phone"></span>
+												13457815482</td>
+							        	</tr>
+							        	<tr>
+							        		<td>Architecture (Jonathon)：<span class="glyphicon glyphicon-phone"></span>  13134567782</td>
+							        	</tr>
+							        </table>
+							    </div>
+							</div>
+		      			</div>
+		   			</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<footer id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mb30">
+                Code licensed under Apache License v2.0, documentation under CC BY 3.0.
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script type="text/babel">
+
+	var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
+	//messageBox
+	var MesComponent = React.createClass({
+
+		addItem:function(){
+
+			if(mesArr.length == 8){
+				alert('Sorry, there has been 8 meesages in the box. Please leave your message tomorrow!');
+				return;
+			}
+
+			var name = this.refs.messageHost.value;
+			var message = this.refs.messageContent.value;
+
+			if(!name){
+				alert('Please input your name!');
+				return;
+			}
+
+			if(!message){
+				alert('Please input your message!');
+				return;
+			}
+
+			var time = Date.now();
+
+			this.props.addItemHandler({
+				name,
+				message,
+				time
+			});
+
+			this.refs.messageHost.value ='';
+			this.refs.messageContent.value = '';
+		},
+
+		render: function(){
+			return (
+				<div className="clearfix">
+					<div className="form-group">
+						<label htmlFor="message-host">Name</label>
+						<input id="message-host" type="text" ref="messageHost" className="form-control" /><br/>
+						<label htmlFor="message-content">Message Content</label>
+						<textarea id="message-content" ref="messageContent" placeholder="Please type your message"
+								  rows="3"></textarea>
+						<button onClick={this.addItem} className="btn btn-primary">Post</button>
+					</div>
+				</div>
+			)
+		}
+	});
+
+	var ItemComponent = React.createClass({
+
+		imgSrc : function(){
+			switch(this.props.name){
+				case 'Manager':
+					return "./img/manager.png";
+				break;
+				case 'Database':
+					return "./img/database.png";
+				break;
+				case 'BackEnd':
+					return "./img/php.png";
+				break;
+				case 'Architecture':
+					return "./img/frames.png";
+				break;
+				default:
+					return "./img/a.png"
+			}
+		},
+
+		getTime : function(){
+			var oDate = new Date(this.props.time);
+			return oDate.toLocaleString();
+
+		},
+
+		render: function(){
+			return (
+				<div className="media well">
+					<div className="media-left">
+						<a href="javascript:;">
+							<img className="media-object icon50" src={this.imgSrc()} />
+						</a>
+					</div>
+					<div className="media-body media-middle">
+						<h4 className="media-heading pull-left">{this.props.name}</h4><em
+							className="sent-time pull-right">{this.getTime()}</em>
+						<p style={{clear: 'both'}}>{this.props.message}</p>
+					</div>
+				</div>
+			)
+		}
+	});
+
+	var ListComponent = React.createClass({
+		render: function(){
+			return (
+					<ReactCSSTransitionGroup component="div" id="message-container"
+											 transitionName="messageContainer" transitionEnterTimeout={800}
+					>
+
+					{
+						this.props.mesArr.map(function(ele){
+							return <ItemComponent key={ele.time} {...ele} />
+						})
+					}
+
+					</ReactCSSTransitionGroup>
+			)
+		}
+	});
+
+	var mesArr = [
+		{
+			"name":"Manager",
+			"message":"大家好，有什么问题尽管问！",
+			"time":Date.now()
+		},
+		{
+			"name":"Database",
+			"message":"收到，今晚凌晨2点准时升级！",
+			"time":Date.now()+5000
+		},{
+			"name":"BackEnd",
+			"message":"你先在站点发布一下通知哈！",
+			"time":Date.now()+10000
+		},{
+			"name":"Architecture",
+			"message":"好嘞！",
+			"time":Date.now()+2000
+		}
+	];
+
+	var MessageBox = React.createClass({
+
+		getInitialState:function(){
+			return {
+				mesArr : this.props.mesArr
+
+			}
+		},
+
+		addItemHandler:function(data){
+			this.state.mesArr.unshift(data);
+			this.setState({
+				mesArr:this.state.mesArr
+			});
+		},
+
+		render: function(){
+			return (
+				<div>
+					<MesComponent addItemHandler={this.addItemHandler} />
+					<ListComponent mesArr={this.state.mesArr}/>
+				</div>
+			)
+		}
+	});
+
+	ReactDOM.render(<MessageBox mesArr={mesArr} />,document.getElementById('msg-list'));
+
+	//to-do-list
+	var toDOList = [
+		'Learn AngularJS',
+		'Review JavaScript',
+		'Review HTML5',
+		'Review CSS3',
+		'Prepare Interview',
+		'Learn ReactJS'
+	];
+
+	//to-do-list head
+	var ToDOHeadComponent =  React.createClass({
+		render:function(){
+			return (<div className="panel-heading">
+				<span className="glyphicon glyphicon-check"></span>&nbsp;&nbsp;To-do List
+			</div>
+			)
+		}
+	});
+
+	////to-do-list foot
+	var ToDoFootComponent = React.createClass({
+
+		addItemHandler: function(){
+			if(toDOList.length == 15){
+				alert('The quantity of items in the list is limited to 15. Please delete some items at first!');
+				return;
+			}
+
+			var item = this.refs.toDoItem.value;
+			if(item == ''){
+				alert('Please type your action!');
+				return;
+			}
+
+			this.props.addItem(item);
+
+		},
+
+		render:function(){
+			return (
+				<div className="input-group">
+					<input ref="toDoItem" id="btn-input" type="text" className="form-control input-md"
+						   placeholder="Add new task" />
+					<span className="input-group-btn">
+						<button onClick={this.addItemHandler} className="btn btn-primary btn-md" id="btn-todo">Add
+						</button>
+					</span>
+				</div>
+			)
+		}
+	});
+
+	var deleteItem = 'deleteItem';
+	//to-do-list item
+	var ToDoItemComponent = React.createClass({
+
+		deleteItemHandler:function(){
+			PubSub.publish(deleteItem, this.props.item);
+		},
+
+		render:function(){
+			return (
+				<li className="todo-list-item">
+					<div className="checkbox">
+						<input type="checkbox" id="checkbox" />
+							<label>{this.props.item}</label>
+					</div>
+					<div className="pull-right action-buttons">
+						<a href="javascript:;" onClick={this.deleteItemHandler}
+						   className="trash"><span className="glyphicon glyphicon-trash"></span></a>
+					</div>
+				</li>
+			)
+		}
+	});
+
+	//to-do-list body
+	var ToDoBodyComponent = React.createClass({
+		render:function(){
+			return (
+				<div className="panel-body">
+					<ReactCSSTransitionGroup component="ul" id="message-container" className="todo-list" transitionName="messageContainer" transitionEnterTimeout={800} transitionLeaveTimeout={500}
+						>
+						{
+							this.props.listArr.map(function(item){
+								return <ToDoItemComponent key={item} item={item} />
+							})
+						}
+					</ReactCSSTransitionGroup>
+				</div>
+			)
+		}
+	});
+
+	var ToDoBoxComponent = React.createClass({
+
+		getInitialState:function(){
+			return {
+				listArr: this.props.listArr
+			}
+		},
+
+		addItem:function(data){
+			this.state.listArr.unshift(data);
+			this.setState({listArr:this.state.listArr});
+		},
+
+		componentDidMount:function(){
+			PubSub.subscribe(deleteItem,(evName,data) =>{
+				var newArr = this.state.listArr.filter(function(item,index){
+					return item!= data;
+				});
+				this.setState({
+					listArr:newArr
+				});
+			});
+		},
+
+		render: function(){
+			return (
+				<div  className="panel panel-default">
+					<ToDOHeadComponent />
+					<ToDoBodyComponent listArr={this.state.listArr}/>
+					<ToDoFootComponent addItem={this.addItem} />
+				</div>
+			)
+		}
+
+	});
+
+	ReactDOM.render(<ToDoBoxComponent listArr={toDOList}/>,document.getElementById('to-do-list'));
+
+
+
+
+
+</script>
+</body>
+</html>

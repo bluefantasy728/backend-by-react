@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"> <!--ie8开启标准渲染模式-->
+<meta name="viewport" content="width=device-width, initial-scale=1 , user-scalable=no">
+<title>网站管理后台</title>
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/user_list.css" />
+<style>
+</style>
+</head>
+<body>
+<nav class="navbar navbar-default">
+	<div class="container">
+		<!--小屏幕时候的logo和菜单按钮-->
+		<div class="navbar-header">
+			<button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a href="javascript:;" class="navbar-brand bg-primary"><strong>BLUE FANTASY</strong> <span>ADMIN</span></a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-left">
+				<li><a href="index.html"><span class="glyphicon glyphicon-home"></span>&nbsp&nbspHOME PAGE</a></li>
+		        <li><a href="server.html"><span class="glyphicon glyphicon-hdd"></span>&nbsp&nbspSERVER STATUS</a></li>
+		        <li class="active"><a href="user_list.html"><span class="glyphicon glyphicon-user"></span>&nbsp&nbspUSER MANAGEMENT</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+                <li><a href="#bbs"><span class="glyphicon glyphicon-off"></span>&nbsp&nbspQUIT</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<!--导航-->
+<section id="list">
+	<div class="container">
+		<div class="row">
+
+		</div>
+	</div>
+</section>
+<!--添加用户-->
+
+<footer id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mb30">
+                Code licensed under Apache License v2.0, documentation under CC BY 3.0.
+            </div>
+        </div>
+    </div>
+</footer>
+	
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/react.js"></script>
+<script src="js/react-with-addons.js"></script>
+<script src="js/react-dom.js"></script>
+<script src="js/browser.min.js"></script>
+<script src="./js/pubsub.js"></script>
+
+<script type="text/babel">
+
+	var userList = [
+		{
+			id:"0005",
+			username:"Victor",
+			password:"12345",
+			time:"2016/9/22 下午4:00:07"
+		},
+		{
+			id:"0004",
+			username:"Mary",
+			password:"12345",
+			time:"2016/9/23 上午7:02:17"
+		},
+		{
+			id:"0003",
+			username:"Qingyu",
+			password:"12345",
+			time:"2016/9/23 下午1:52:17"
+		},
+		{
+			id:"0002",
+			username:"Yushuang",
+			password:"12345",
+			time:"2016/9/26 下午4:23:17"
+		},
+		{
+			id:"0001",
+			username:"Yongping",
+			password:"12345",
+			time:"2016/9/27 下午1:57:17"
+		}
+	];
+	var removeUser = 'removeUserHandler';
+	var searchUser = 'searchUser';
+	var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
+	//表格中每一行
+	const RowComponent = React.createClass({
+
+		removeUserHandler:function(){ //发布数据，事件名是在全局定义的removeUser字符串，并将对应的那一行的时间传给父级
+			PubSub.publish(removeUser, this.props.time);
+		},
+
+		render: function(){
+			return (
+				<tr>
+					<th>{this.props.id}</th>
+					<td>{this.props.username}</td>
+					<td>{this.props.password}</td>
+					<td>{this.props.time}</td>
+					<td>
+						<button className="btn btn-danger" type="button" onClick={this.removeUserHandler}>删除</button>
+					</td>
+				</tr>
+			)
+		}
+	});
+
+	//表格区域
+	const TableComponent = React.createClass({
+
+		render: function(){
+
+			var rows = this.props.userList.map(function(item){
+				return <RowComponent key={item.time} {...item} />
+			});
+
+			return (
+				<div className="col-md-9" id="table-area">
+
+					<table className="table table-striped">
+						<thead>
+							<tr>
+								<th width="20%">ID</th>
+								<th width="20%">用户名</th>
+								<th width="20%">密码</th>
+								<th width="30%">加入时间</th>
+								<th width="10%">操作</th>
+							</tr>
+						</thead>
+						<ReactCSSTransitionGroup component="tbody" id="table-body"
+												 transitionName="tableTransition" transitionEnterTimeout={500}
+												 transitionLeaveTimeout={500}>
+							{rows}
+						</ReactCSSTransitionGroup>
+					</table>
+
+				</div>
+			)
+		}
+	});
+
+	//左侧栏内容
+	const SideComponent = React.createClass({
+
+		getCurrentTime : function(){
+			var oDate = new Date();
+			return oDate.toLocaleString();
+		},
+
+		addUserHandler:function(ev){
+			var data = {
+				username:this.refs.username.value,
+				password:this.refs.password.value,
+				time:this.getCurrentTime() //将点击时的当前时间传给data
+			};
+
+			if(!data.username){
+				alert('Please input your name!');
+				ev.preventDefault();
+				return;
+			}
+
+			if(!data.password){
+				alert('Please input your password!');
+				ev.preventDefault();
+				return;
+			}
+			ev.preventDefault(); //取消点击按钮的默认刷新页面事件
+			this.props.addUser(data);
+			this.refs.username.value = '';
+			this.refs.password.value = '';
+		},
+
+		searchHandler:function(ev){
+			var text = ev.target.value;
+			this.props.searchUser(text);
+		},
+
+		render:function(){
+			return (
+				<div id="btnNav" className="col-md-3">
+					<form className="form">
+						<div>
+							<label htmlFor="username">用户名：</label>
+							<input ref="username" id="username" type="text" className="form-control" /><br/>
+							<label htmlFor="password">密码：</label>
+							<input ref="password" id="password" type="text" className="form-control" /><br/>
+							<button className="btn btn-info" onClick={this.addUserHandler}>添加用户</button><br/>
+						</div>
+						<div className="mt20">
+							<label htmlFor="search">按照用户名搜索用户：</label>
+							<input id="search" onFocus={this.props.focusHandler} onChange={this.searchHandler}
+								   onBlur={this.props.blurHandler} type="text" className="form-control" />
+						</div>
+					</form>
+				</div>
+			)
+		}
+	});
+
+	//整个内容区
+	const ContainerComponent = React.createClass({
+
+		getInitialState:function(){
+			return {
+				userList: this.props.userList,
+				id:this.props.userList.length + 1,
+				currentList: []
+			}
+		},
+
+		componentDidMount:function(){
+			PubSub.subscribe(removeUser,(evName,time) =>{  //这里的data是指子级发布的时候传的数据
+				var newArr = this.state.userList.filter(function(item){
+					//filter() 方法创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素。
+					return item.time != time; //将userList中的每一项中的time和传进来的time比较，如果不相等，把遍历到的那一项放到新数组，那么传进来的那个就删除了
+				});
+				this.setState({
+					userList:newArr
+				});
+			});
+		},
+
+		//根据id的位数来补不同数量的0
+		getId : function(){
+			var _id = this.state.id;
+			switch (_id.toString().length){
+				case 1:
+					return '000' + (_id++);
+				case 2:
+					return '00' + (_id++);
+				case 3:
+					return '0' + (_id++);
+				case 4:
+					return _id++;
+			}
+		},
+
+		//在搜索框聚焦时，将当前state里的userList赋值给currentList，然后每次输入，筛选的对象都是currentList
+		focusHandler:function(){
+			this.state.currentList = this.state.userList;
+		},
+
+		//在失去焦点时立刻将刚才存储的currentList赋值给userList，让视图再恢复到点击搜索框之前
+		blurHandler:function(){
+			this.setState(function(){
+				return {
+					userList: this.state.currentList
+				}
+			});
+		},
+
+		//搜索功能
+		searchUser:function(text){
+
+			//这里要将text进行判断，如果为空，就要让视图呈现刚聚焦时的状态，否则就进行筛选
+			if(text!=''){
+				var newText = text.toLowerCase();
+				var newArr = this.state.currentList.filter(function(item){ //每次点击通过保存的currentList来过滤
+					return item.username.toLowerCase().indexOf(newText) != -1;
+				});
+				this.setState(function(){
+					return {
+						userList: newArr
+					}
+				});
+			}else{
+				this.setState(function(){
+					return {
+						userList: this.state.currentList
+					}
+				});
+			}
+		},
+
+		//把接受到的参数再传一个id进去，再push到state里的数组里，每次触发事件后，组件自身的id要+1
+		addUser:function(data){
+			if(this.state.userList.length == 7){
+				alert('今天添加的用户已经超过规定限制，请明天再添加！');
+				return;
+			}
+			data.id = this.getId();
+			this.state.userList.unshift(data);
+			this.setState(function(){
+
+				return {
+					id : this.state.id + 1,
+					userList:this.state.userList
+				}
+			});
+		},
+
+		render:function(){
+			return (
+				<div className="container">
+					<div className="row">
+						<SideComponent addUser={this.addUser} searchUser={this.searchUser}
+									   focusHandler={this.focusHandler} blurHandler={this.blurHandler}/>
+						<TableComponent userList={this.state.userList} />
+					</div>
+				</div>
+			)
+		}
+	});
+
+	ReactDOM.render(<ContainerComponent userList={userList}/>,document.getElementById('list'));
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

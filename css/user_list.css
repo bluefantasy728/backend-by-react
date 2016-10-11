@@ -1,0 +1,84 @@
+body{
+	font-family: "微软雅黑";
+}
+.icon-grain{
+	width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: white;
+    background: #40d2b1;
+    text-align: center;
+    line-height: 40px;
+    margin-right: 15px;
+}
+.table>tbody>tr>td, .table>tbody>tr>th{
+	vertical-align: middle;
+}
+
+/*顶部导航*/
+.navbar a span{
+	color: #00bfff;
+}
+.navbar a strong{
+	color: deepskyblue;
+}
+/*顶部导航*/
+/*列表*/
+.mt20{
+	margin-top:20px;
+}
+#list .page-header{
+	margin-top: 0;
+	padding-bottom: 0;
+}
+#list #user_search{
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-top: none;
+}
+#list .list-group a{
+	text-align: center;
+	letter-spacing: 2px;
+}
+#list .tableTransition-enter{
+	opacity: 0;
+}
+#list .tableTransition-enter.tableTransition-enter-active{
+	opacity: 1;
+	transition:opacity 500ms ease;
+}
+#list .tableTransition-leave{
+	opacity: 1;
+}
+#list .tableTransition-leave.tableTransition-leave-active{
+	opacity: 0;
+	transition:opacity 500ms ease;
+}
+
+/*列表*/
+
+/*底部*/
+#footer{
+	text-align: center;
+	margin-top: 20px;
+}
+/*底部*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
